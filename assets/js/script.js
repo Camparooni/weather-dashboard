@@ -5,15 +5,28 @@ const weatherCards = document.querySelector('.weather-cards');
 const currentWeather = document.querySelector('.current-weather');
 
 
-const createWeatherCard = (weatherItem) => {
+const createWeatherCard = (cityName, weatherItem, index) => {
+    if(index === 0) {
+        return `<div class="details">
+                    <h2>${cityName} (${weatherItem.dt_txt.split(" ")[0]})</h2>
+                    <h4>Temp: ${((weatherItem.main.temp -273.15) * 9/5 + 32).toFixed(2)}°F</h4>
+                    <h4>Wind: ${weatherItem.wind.speed} MPH</h4>
+                    <h4>Humidity: ${weatherItem.main.humidity} %</h4>
+                </div>
+                <div class="icon">
+                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png">
+                    <h4>${weatherItem.weather[0].description}</h4>
+                </div>`;
 
-    return `<li class="card">
+    } else {
+        return `<li class="card">
                 <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
                 <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png">
                 <h4>Temp: ${((weatherItem.main.temp -273.15) * 9/5 + 32).toFixed(2)}°F</h4>
                 <h4>Wind: ${weatherItem.wind.speed} MPH</h4>
                 <h4>Humidity: ${weatherItem.main.humidity} %</h4>
             </li>`;
+    }
 }
 
 
@@ -21,7 +34,7 @@ const getWeatherDetails = (cityName, lat, lon) => {
     const weatherDetailsAPI = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPI}`;
 
     fetch(weatherDetailsAPI).then(res => res.json()).then(data => {
-        console.log(data);
+        
 
         const forecastDays = [];
         const fiveDayForecast = data.list.filter(forecast => {
@@ -36,12 +49,11 @@ const getWeatherDetails = (cityName, lat, lon) => {
         weatherCards.innerHTML = '';
 
 
-        console.log(fiveDayForecast);
-        fiveDayForecast.forEach(weatherItem => {
+        fiveDayForecast.forEach((weatherItem, index) => {
             if(index === 0) {
-                weatherCards.insertAdjacentHTML('beforeend', createWeatherCard(cityName, weatherItem, index));
+                currentWeather.insertAdjacentHTML('beforeend', createWeatherCard(cityName, weatherItem, index));
             } else {
-                weatherCards.insertAdjacentHTML('beforeend', createWeatherCard(weatherItem));
+                weatherCards.insertAdjacentHTML('beforeend', createWeatherCard(cityName, weatherItem, index));
             }
         });
 
