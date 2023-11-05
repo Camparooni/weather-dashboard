@@ -77,9 +77,60 @@ const getCityCoordinates = () => {
         if(!data.length) return alert('Could not retrieve coordinates for ${cityName}');
         const { name, lat, lon } = data[0];
         getWeatherDetails (name, lat, lon);
+
     }).catch(() => {
         alert('Could not retrieve coordinates');
     });
 }
 
 searchButton.addEventListener('click', getCityCoordinates);
+
+
+function addToSearchHistory(city) {
+    const listItem = document.createElement('li');
+    listItem.textContent = city;
+
+    listItem.addEventListener('click', function () {
+        handleSearchHistoryClick(city);
+    });
+
+    historyList.appendChild(listItem);
+}
+
+function handleSearchHistoryClick(city) {
+    fetchWeatherData(city);
+}
+
+
+function updateSearchHistory(city) {
+    searchHistory.unshift(city);
+    if (searchHistory.length > 10) {
+        searchHistory.pop();
+    }
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+}
+
+function loadSearchHistory() {
+    const savedHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    searchHistory.push(...savedHistory); 
+
+    searchHistory.forEach((city) => {
+        addToSearchHistory(city);
+    });
+}
+
+function initSearchHistory() {
+    loadSearchHistory();
+}
+
+initSearchHistory();
+
+
+searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const city = cityInput.value.trim();
+    if (city) {
+        addToSearchHistory(city);
+    }
+});
