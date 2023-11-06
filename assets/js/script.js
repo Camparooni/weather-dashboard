@@ -37,7 +37,7 @@ const createWeatherCard = (cityName, weatherItem, index) => {
 
 
 const getWeatherDetails = (cityName, lat, lon) => {
-    const weatherDetailsAPI = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPI}`;
+    const weatherDetailsAPI = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPI}`;
 
     fetch(weatherDetailsAPI).then(res => res.json()).then(data => {
         
@@ -71,7 +71,7 @@ const getWeatherDetails = (cityName, lat, lon) => {
 const getCityCoordinates = () => {
     const cityName = cityInput.value.trim();
     if(!cityName) return;
-    const geocodingAPI =`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${weatherAPI}`;
+    const geocodingAPI =`https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${weatherAPI}`;
 
     fetch(geocodingAPI).then(res => res.json()).then(data => {
         if(!data.length) return alert('Could not retrieve coordinates for ${cityName}');
